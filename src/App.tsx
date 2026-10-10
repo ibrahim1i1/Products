@@ -34,8 +34,67 @@ function App() {
 
 
   return (
-    <div>
-      
+    <div className='min-h-screen bg-slate-900 text-slate-900 p-6'>
+      <div className='max-w-6x mx-auto bg'>
+        <header className=' mb-8 text-center'>
+          <h1 className='text-white text-3xl font-bold tracking-tight mb-2'>Product Store</h1>
+          <p className='text-slate-400 text-sm'>Product Display and Filtering Project Using an API</p>
+        </header>
+
+        {loading && (
+          <div className='flex justify-center items-center py-20'>
+            <div className='w-10 h-10 border-4 border-blue-500 rounded-full  border-t-transparent animate-spin'></div>
+          </div>
+        )}
+
+        {error && !loading && (
+          <div className='bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-xl text-center max-w-md mx-auto'>
+            {error}
+          </div>
+        )}
+
+        {!loading && !error && (
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
+            {products.map((product) => (
+              <div
+                className='bg-slate-800 border border-slate-700/60 rounded-xl overflow-hidden hover:shadow-slate-500 hover:shadow-md
+                 hover:scale-102 transition-all duration-200 flex flex-col justify-between'
+                key={product.id}
+              >
+
+                <div className='h-48 w-full bg-slate-950/40 p-4 flex items-center justify-center'>
+                  <img
+                    className='max-h-full max-w-full object-contain'
+                    src={product.thumbnail} alt={product.title} />
+                </div>
+
+
+                <div className='p-4 flex flex-col flex-grow justify-between gap-3'>
+                  <div>
+                    <span className='text-blue-400 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-500/10 uppercase
+                     tracking-wider'>{product.category}</span>
+                    <h2 className='text-base font-semibold text-white mt-2 line-clamp-1'>{product.title}</h2>
+                    <p className='text-slate-400 text-xs line-clamp-2 mt-1'>{product.description}</p>
+                  </div>
+                </div>
+
+                <div className='flex items-center justify-between pt-2 border-t border-slate-700/40'>
+                  <span className='text-emerald-400 text-lg font-bold mx-2'>
+                    ${product.price}
+                  </span>
+                  <span className='text-amber-400 font-medium mx-2'>
+                    ★ {product.rating}
+                  </span>
+                </div>
+
+              </div>
+            ))}
+          </div>
+        )}
+
+
+      </div>
+
     </div>
   );
 
