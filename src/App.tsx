@@ -7,6 +7,11 @@ function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
+  const [search, setSearech] = useState<string>('');
+
+  const filteredProducts = products.filter((product) =>
+    product.title.toLowerCase().includes(search.toLowerCase())
+  )
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -41,6 +46,21 @@ function App() {
           <p className='text-slate-400 text-sm'>Product Display and Filtering Project Using an API</p>
         </header>
 
+        <div className='max-w-md mx-auto mb-6'>
+          <input type="text"
+            className='border border-slate-700 w-full bg-slate-800 rounded-xl text-white placeholder-slate-400 focus:outline-none px-4 py-2 focus:border-blue-400 focus:ring-1 focus:ring-blue-500 transition duration-150'
+            placeholder='Search by title'
+            value={search}
+            onChange={(e) => setSearech(e.target.value)}
+          />
+        </div>
+
+        {!loading && !error && filteredProducts.length === 0 && (
+          <p className='text-center text-slate-400 py-10'>
+            There are no matching products for {search}
+          </p>
+        )}
+
         {loading && (
           <div className='flex justify-center items-center py-20'>
             <div className='w-10 h-10 border-4 border-blue-500 rounded-full  border-t-transparent animate-spin'></div>
@@ -55,7 +75,7 @@ function App() {
 
         {!loading && !error && (
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <div
                 className='bg-slate-800 border border-slate-700/60 rounded-xl overflow-hidden hover:shadow-slate-500 hover:shadow-md
                  hover:scale-102 transition-all duration-200 flex flex-col justify-between'
