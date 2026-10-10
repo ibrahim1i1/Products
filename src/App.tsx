@@ -8,10 +8,14 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearech] = useState<string>('');
+  const [selectCategory, setSearchCategory] = useState<string>('all');
 
-  const filteredProducts = products.filter((product) =>
-    product.title.toLowerCase().includes(search.toLowerCase())
-  )
+
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch = product.title.toLowerCase().includes(search.toLowerCase());
+    const matchesCategory = selectCategory === 'all' || product.category === selectCategory
+    return matchesSearch && matchesCategory;
+  })
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -37,6 +41,8 @@ function App() {
     fetchProducts();
   }, [])
 
+  const categories = ['all', ...Array.from(new Set(products.map((p) => p.category)))];
+
 
   return (
     <div className='min-h-screen bg-slate-900 text-slate-900 p-6'>
@@ -46,13 +52,27 @@ function App() {
           <p className='text-slate-400 text-sm'>Product Display and Filtering Project Using an API</p>
         </header>
 
-        <div className='max-w-md mx-auto mb-6'>
+        <div className='max-w-2xl mx-auto mb-6 flex flex-col sm:flex-row gap-4'>
           <input type="text"
             className='border border-slate-700 w-full bg-slate-800 rounded-xl text-white placeholder-slate-400 focus:outline-none px-4 py-2 focus:border-blue-400 focus:ring-1 focus:ring-blue-500 transition duration-150'
             placeholder='Search by title'
             value={search}
             onChange={(e) => setSearech(e.target.value)}
           />
+
+          <select
+          className='bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-blue-500 cursor-pointer capitalize'
+            value={selectCategory}
+            onChange={(e) => setSearchCategory((e).target.value)}
+          >
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category === 'all' ? 'All Categories' : category}
+              </option>
+            ))}
+
+
+          </select>
         </div>
 
         {!loading && !error && filteredProducts.length === 0 && (
